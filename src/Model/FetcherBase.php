@@ -128,7 +128,7 @@ abstract class FetcherBase implements FetcherInterface
 
         // Prefix.
         $prefix = $this->getServerAddress() . '/xml_s3/xml_server3.cgi';
-        $suffix = ';lang=' . $this->getLanguage() . ';output=productxml;';
+        $suffix = '&lang=' . $this->getLanguage() . '&output=productxml&';
 
         // Structure the url. There might be more urls available.
         if (!empty($ean)) {
@@ -139,7 +139,7 @@ abstract class FetcherBase implements FetcherInterface
         if (!empty($this->getSku()) && !empty($this->getBrand())) {
             $checkurls[] = $prefix .
                 '?prod_id=' . urlencode($this->getSku()) .
-                ';vendor=' . $this->getBrand() .
+                '&vendor=' . $this->getBrand() .
                 $suffix;
         }
         $this->setUrls($checkurls);
@@ -178,7 +178,8 @@ abstract class FetcherBase implements FetcherInterface
     {
         foreach ($this->getUrls() as $url) {
             $client = new Client();
-            $response = $client->request('GET', $url, [
+
+            $response = $client->get($url, [
                 'verify' => true,
                 'auth' => [
                     $this->getUsername(),
